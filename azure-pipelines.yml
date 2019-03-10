@@ -1,16 +1,6 @@
-# Matriz de máquinas que vamos a utilizar
-strategy:
-  matrix:
-    linux:
-      imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.13'
-    windows:
-      imageName: 'vs2017-win2016'
-
 # Configuramos el pool con la imagen
 pool:
-  vmImage: $(imageName)
+  vmImage: 'ubuntu-16.04'
 
 # Variables de trabajo
 variables:
