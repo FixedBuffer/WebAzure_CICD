@@ -1,32 +1,50 @@
-pool:
-  vmImage: 'ubuntu-16.04'
+# Matriz de máquinas que vamos a utilizar
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.13'
+    windows:
+      imageName: 'vs2017-win2016'
 
+# Configuramos el pool con la imagen
+pool:
+  vmImage: $(imageName)
+
+# Variables de trabajo
 variables:
-  BuildConfiguration : 'Release'
-  BuildPlatform: 'BuildPlatform' 
-  Project : '**/*.csproj'
-  
+  buildConfiguration : 'Release'
+  project : '**/*.csproj'
+ 
+# Pasos
 steps:
+# Restore Nuget
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
     command: restore
-    projects: '$(Project)'
-
+    projects: '$(project)'
+# Compilamos el proyecto
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
-    projects: '$(Project)'
-    arguments: '--configuration $(BuildConfiguration)'
+    projects: '$(project)'
+    arguments: '--configuration $(buildConfiguration)'
 
+# Aquí van las pruebas unitarias
+# ------
+
+# Publicamos la solución indicándole que queremos zipearla
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
     command: publish
     publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
 
+# Subimos los artefactos
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
