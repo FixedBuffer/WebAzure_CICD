@@ -39,3 +39,9 @@ steps:
   displayName: 'Publish Artifact'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish scripts'
+  inputs:
+    PathtoPublish: AzureResources
+    ArtifactName: deploy
